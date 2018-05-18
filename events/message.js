@@ -29,7 +29,7 @@ module.exports = function (bot, message) {
 
   // for regular commands
   for (var cmd in commandList) {
-    if (cmd === command && hasPerm.bot(bot, message, commandList[cmd].botPerm) && hasPerm.user(message, commandList[cmd].userPerm)) {
+    if (cmd === command && hasPerm.bot(bot, message, commandList[cmd].botPerm)) {
       return hasPerm.user(message, commandList[cmd].userPerm, function (err, allowed) {
         if (err) return console.log(`Commands Warning: Unable to fetch member for command ${message.content} (${message.author.id}, ${message.author.username})`, message.guild, message.author, err)
         if (!allowed) return
