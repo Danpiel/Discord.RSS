@@ -129,7 +129,6 @@ exports.checkMasterConfig = function (masterConfig) {
   const langList = masterConfig.feedSettings.dateLanguageList
   for (var u = langList.length - 1; u >= 0; --u) moment.locale(langList[u])  // Set the global moment locale/language to the 0 index item
 
-
   let errMsg
   for (var e in fatalInvalidConfigs) errMsg += `\n${e}: ${fatalInvalidConfigs[e]}`
   if (errMsg) {

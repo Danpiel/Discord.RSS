@@ -17,10 +17,6 @@ function isBotController (command, author) {
   return false
 }
 
-function logCommand (message) {
-  return console.log(`Commands Info: (${message.guild.id}, ${message.guild.name}) => Used ${message.content}.`)
-}
-
 module.exports = function (bot, message) {
   if (!message.member || message.author.bot || !message.content.startsWith(config.botSettings.prefix)) return
   if (blacklistGuilds.ids.includes(message.guild.id)) return
@@ -34,8 +30,12 @@ module.exports = function (bot, message) {
   // for regular commands
   for (var cmd in commandList) {
     if (cmd === command && hasPerm.bot(bot, message, commandList[cmd].botPerm) && hasPerm.user(message, commandList[cmd].userPerm)) {
-      logCommand(message)
-      return loadCommand(command)(bot, message, command)
+      return hasPerm.user(message, commandList[cmd].userPerm, function (err, allowed) {
+        if (err) return console.log(`Commands Warning: Unable to fetch member for command ${message.content} (${message.author.id}, ${message.author.username})`, message.guild, message.author, err)
+        if (!allowed) return
+        console.log(`Commands Info: (${message.guild.id}, ${message.guild.name}) => Used ${message.content}.`)
+        return loadCommand(command)(bot, message, command)
+      })
     }
   }
 
